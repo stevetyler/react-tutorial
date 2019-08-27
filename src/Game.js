@@ -5,26 +5,30 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      squares: Array(9).fill(null),
+      history: [{
+        squares: Array(9).fill(null)
+      }],
       xIsNext: true
     }
   }
   handleClick(i) {
-    const squares = this.state.squares.slice() // create copy for immutability
+    const history = this.state.history
+    const current = history[history.length - 1]
+    const squares = current.squares.slice() // create copy for immutability
     // Ignore a click if someone has won the game or if a Square is already filled:
     if (calculateWinner(squares) || squares[i]) {
       return
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O'
     this.setState({
-      squares,
+      history: history.concat(squares),
       xIsNext: !this.state.xIsNext
     })
   }
   render() {
     const history = this.state.history;
     const current = history[history.length - 1]
-    const winner = calculateWinner(this.state.squares)
+    const winner = calculateWinner(current.squares)
     let status;
     if (winner) {
       status = 'Winner: ' + winner;
